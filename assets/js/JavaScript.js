@@ -1,87 +1,117 @@
-const submitButton = document.getElementById('submitButton')
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.getElementById('submitButton');
+    const formContainer = document.getElementById('formContainer');
 
-// navn
-let usernameElement = document.getElementById('navn')
-usernameElement.addEventListener('keydown', (event) => {
-    console.log(event.target.value);
-    let inputLength = event.target.value.length
-    if (inputLength >= 2) {
-        console.log('jubi');
-        usernameElement.style.outlineColor = 'green'
-    }
-    else {
-        console.log('NEJ');
-        usernameElement.style.outlineColor = 'red'
-    }})
-// efternavn
-let userlastnameElement = document.getElementById('efternavn')
-userlastnameElement.addEventListener('keydown', (event) => {
-    console.log(event.target.value);
-    let inputLength = event.target.value.length
-    if (inputLength >= 2) {
-        console.log('jubi');
-        userlastnameElement.style.outlineColor = 'green'
-    }
-    else {
-        console.log('NEJ');
-        userlastnameElement.style.outlineColor = 'red'
-    }})
-// email
-let useremailElement = document.getElementById('email')
-useremailElement.addEventListener('keydown', (event) => {
-    console.log(event.target.value);
-    let inputLength = event.target.value.length
-    if (inputLength >= 2) {
-        console.log('jubi');
-        useremailElement.style.outlineColor = 'green'
-    }
-    else {
-        console.log('NEJ');
-        useremailElement.style.outlineColor = 'red'
-    }})
-// alder
-let userageElement = document.getElementById('alder')
-userageElement.addEventListener('keydown', (event) => {
-    console.log(event.target.value);
-    let inputLength = event.target.value.length
-    if (inputLength <= 0) {
-        console.log('jubi');
-        userageElement.style.outlineColor = 'green'
-    }
-    else {
-        console.log('NEJ');
-        userageElement.style.outlineColor = 'red'
-    }})
+    // Navn validering
+    let usernameElement = document.getElementById('navn');
+    usernameElement.addEventListener('input', () => {
+        validateName(usernameElement);
+    });
 
+    // Etternavn validering
+    let userlastnameElement = document.getElementById('efternavn');
+    userlastnameElement.addEventListener('input', () => {
+        validateName(userlastnameElement);
+    });
 
+    // Email validering
+    let useremailElement = document.getElementById('email');
+    useremailElement.addEventListener('input', () => {
+        validateEmail(useremailElement);
+    });
 
+    // Alder validering
+    let userageElement = document.getElementById('alder');
+    userageElement.addEventListener('input', () => {
+        validateAge(userageElement);
+    });
+
+    // Interesser validering
+    let userInterestElement = document.getElementById('interesser');
+    userInterestElement.addEventListener('change', () => {
+        validateSelect(userInterestElement);
+    });
+
+    const namePattern = /^[A-Za-zÆØÅæøå\s\-']+$/;
+
+    function validateName(nameElement) {
+        let name = nameElement.value.trim();
+        if (namePattern.test(name)) {
+            nameElement.style.outlineColor = 'green';
+            return true;
+        } else {
+            nameElement.style.outlineColor = 'red';
+            return false;
+        }
+    }
+
+    function validateEmail(emailElement) {
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailPattern.test(emailElement.value.trim())) {
+            emailElement.style.outlineColor = 'green';
+            return true;
+        } else {
+            emailElement.style.outlineColor = 'red';
+            return false;
+        }
+    }
+
+    function validateAge(ageElement) {
+        let age = parseInt(ageElement.value);
+        if (!isNaN(age) && age > 0) { 
+            ageElement.style.outlineColor = 'green';
+            return true;
+        } else {
+            ageElement.style.outlineColor = 'red';
+            return false;
+        }
+    }
     
-submitButton.addEventListener('click', (event) => {
-    event.preventDefault()
-    console.log('Submit button clicked');
 
-    // console log navn
-    let userName = document.getElementById('navn').value
-    console.log('Name:', userName)
+    function validateSelect(selectElement) {
+        if (selectElement.value !== '') {
+            selectElement.style.outlineColor = 'green';
+            return true;
+        } else {
+            selectElement.style.outlineColor = 'red';
+            return false;
+        }
+    }
 
-    // console log efternavn
-    let userLastName = document.getElementById('efternavn').value
-    console.log('Last Name:', userLastName)
+    submitButton.addEventListener('click', (event) => {
+        event.preventDefault();
 
-    // console log email
-    let userEmail = document.getElementById('email').value
-    console.log('Email:', userEmail)
+        let isFormValid = true;
 
-    // console log alder
-    let userAge = document.getElementById('alder').value
-    console.log('Age:', userAge)
+        if (!validateName(usernameElement)) {
+            isFormValid = false;
+        }
 
-    // console log interesser
-    let userInterest = document.getElementById('interesser').value
-    console.log('Interests:', userInterest)
+        if (!validateName(userlastnameElement)) {
+            isFormValid = false;
+        }
 
-    let myUserData = [userName, userLastName, userEmail, userAge, userInterest]
-    console.table(myUserData)
+        if (!validateEmail(useremailElement)) {
+            isFormValid = false;
+        }
 
-}
-)
+        if (!validateAge(userageElement)) {
+            isFormValid = false;
+        }
+
+        if (!validateSelect(userInterestElement)) {
+            isFormValid = false;
+        }
+
+        if (isFormValid) {
+            console.log('Jubii!!!');
+
+            let formData = new FormData(formContainer);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        } else {
+            console.log('Womp Womp...');
+        }
+    });
+});
